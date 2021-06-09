@@ -1,0 +1,227 @@
+channels:
+  # general channel, everyone can use it
+  general:
+    displayname: ''
+    default: true
+    command: 'g'
+    aliases:
+    - 'general'
+    - 'global'
+    formats:
+    - 'default'
+    - 'vip'
+    - 'staff'
+  staff:
+    displayname: '&8(&5Staff&8) '
+    default: false
+    command: 'sc'
+    aliases:
+    - 'staffchat'
+    formats:
+    - 'staff'
+hooks:
+  towny: # towny hook
+    enabled: false
+    channels:
+      town:
+        displayname: '&8(&bTown&8) '
+        command: 'tc'
+        formats:
+        - 'town-default'
+        - 'town-vip'
+      nation:
+        displayname: '&8(&eNación&8) '
+        command: 'nc'
+        formats:
+        - 'nation-default'
+        - 'nation-vip'
+formats:
+  default:
+    priority: 1000
+    permission: 'rainbowchat.format.default'
+    color: '7'
+    parts:
+      channel:
+        text: '%rainbowchat_channel%'
+      town-tag:
+        text: '%townyadvanced_nation%'
+        hover:
+        - 'Este jugador pertenece a %townyadvanced_nation_formatted%'
+      town-rank:
+        text: '&e%townyadvanced_towny_prefix%&r'
+        hover:
+        - '&e%townyadvanced_nation_king%&7 asignó este'
+        - '&7título a &e%player_name%'
+      name:
+        text: '%vault_prefix%%player_name%' # display name component
+        click-action: 'SUGGEST_COMMAND'
+        click-command: '/msg %player_name%'
+        hover:
+        - '&7Click para enviar un mensaje'
+        - '&7privado a &e%player_name%'
+      suffix:
+        text: ' &8» '
+  vip:
+    priority: 100
+    permission: 'rainbowchat.format.vip'
+    color: 'f'
+    parts:
+      channel:
+        text: '%rainbowchat_channel%'
+      town-tag:
+        text: '%townyadvanced_nation%'
+      town-rank:
+        text: '&e%townyadvanced_towny_prefix%&r'
+        hover:
+        - '&e%townyadvanced_nation_king%&7 asignó este'
+        - '&7título a &e%player_name%'
+      prefix:
+        text: '%vault_prefix%'
+        hover:
+        - '&8&m                                                 '
+        - '&7Rango entregado a esta persona por'
+        - '&7donar al servidor, puedes obtener'
+        - '&7más información ingresando a:'
+        - ''
+        - '&#b77090            tienda.indiopikaro.cl'
+        - '&8&m                                                 '
+      name:
+        text: '%player_displayname%' # display name component
+        click-action: 'SUGGEST_COMMAND'
+        click-command: '/msg %player_name%'
+        hover:
+        - '&7Click para enviar un mensaje'
+        - '&7privado a &e%player_name%'
+      suffix:
+        text: ' &8» '
+  staff:
+    priority: 1
+    permission: 'rainbowchat.format.staff'
+    color: '#5bd6ff'
+    parts:
+      channel:
+        text: '%rainbowchat_channel%'
+      town-tag:
+        text: '%townyadvanced_nation%'
+        hover:
+        - 'Este jugador pertenece a %townyadvanced_nation_formatted%'
+      prefix:
+        text: '%vault_prefix%'
+        hover:
+        - '&8&m                                     '
+        - '&7Esta persona es miembro del'
+        - '&#ffa514 ✸&#51f359&l STAFF &#ffa514✸&7 del servidor'
+        - '&8&m                                     '
+      name:
+        text: '%player_displayname%' # display name component
+        click-action: 'SUGGEST_COMMAND'
+        click-command: '/msg %player_name%'
+        hover:
+        - '&7Click para enviar un mensaje'
+        - '&7privado a &e%player_name%'
+      suffix:
+        text: ' &8» '
+  town-default:
+    priority: 999
+    permission: 'rainbowchat.format.default'
+    color: 'b'
+    parts:
+      channel:
+        text: '%rainbowchat_channel%'
+      town-rank:
+        text: '&e%townyadvanced_towny_prefix%&r'
+        hover:
+        - '&e%townyadvanced_nation_king%&7 asignó este'
+        - '&7título a &e%player_name%'
+      name:
+        text: '%vault_prefix%&7%player_name%' # display name component
+        click-action: 'SUGGEST_COMMAND'
+        click-command: '/msg %player_name%'
+        hover:
+        - '&7Click para enviar un mensaje'
+        - '&7privado a &e%player_name%'
+      suffix:
+        text: ' &8» '
+  town-vip:
+    priority: 997
+    permission: 'rainbowchat.format.vip'
+    color: 'b'
+    parts:
+      channel:
+        text: '%rainbowchat_channel%'
+      town-rank:
+        text: '&e%townyadvanced_towny_prefix%&r'
+        hover:
+        - '&e%townyadvanced_nation_king%&7 asignó este'
+        - '&7título a &e%player_name%'
+      prefix:
+        text: '%vault_prefix%'
+        hover:
+        - '&8&m                                                 '
+        - '&7Rango entregado a esta persona por'
+        - '&7donar al servidor, puedes obtener'
+        - '&7más información ingresando a:'
+        - ''
+        - '&#b77090            tienda.indiopikaro.cl'
+        - '&8&m                                                 '
+      name:
+        text: '&f%player_displayname%' # display name component
+        click-action: 'SUGGEST_COMMAND'
+        click-command: '/msg %player_name%'
+        hover:
+        - '&7Click para enviar un mensaje'
+        - '&7privado a &e%player_name%'
+      suffix:
+        text: ' &8» '
+  nation-default:
+    priority: 999
+    permission: 'rainbowchat.format.default'
+    color: 'e'
+    parts:
+      channel:
+        text: '%rainbowchat_channel%'
+      town-rank:
+        text: '&e%townyadvanced_towny_prefix%&r'
+        hover:
+        - '&e%townyadvanced_nation_king%&7 asignó este'
+        - '&7título a &e%player_name%'
+      name:
+        text: '%vault_prefix%&7%player_name%' # display name component
+        click-action: 'SUGGEST_COMMAND'
+        click-command: '/msg %player_name%'
+        hover:
+        - '&7Click para enviar un mensaje'
+        - '&7privado a &e%player_name%'
+      suffix:
+        text: ' &8» '
+  nation-vip:
+    priority: 997
+    permission: 'rainbowchat.format.vip'
+    color: 'e'
+    parts:
+      channel:
+        text: '%rainbowchat_channel%'
+      town-rank:
+        text: '&e%townyadvanced_towny_prefix%&r'
+        hover:
+        - '&e%townyadvanced_nation_king%&7 asignó este'
+        - '&7título a &e%player_name%'
+      prefix:
+        text: '%vault_prefix%'
+        hover:
+        - '&8&m                                                 '
+        - '&7Rango entregado a esta persona por'
+        - '&7donar al servidor, puedes obtener'
+        - '&7más información ingresando a:'
+        - ''
+        - '&#b77090            tienda.indiopikaro.cl'
+        - '&8&m                                                 '
+      name:
+        text: '&f%player_displayname%' # display name component
+        click-action: 'SUGGEST_COMMAND'
+        click-command: '/msg %player_name%'
+        hover:
+        - '&7Click para enviar un mensaje'
+        - '&7privado a &e%player_name%'
+      suffix:
+        text: ' &8» '

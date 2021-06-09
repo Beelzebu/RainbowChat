@@ -1,0 +1,7 @@
+name: RainbowChat
+version: ${project.version}
+main: com.github.beelzebu.rainbowchat.RainbowChat
+api-version: 1.16
+authors: [ Beelzebu ]
+description: JSON chat with rgb support for 1.16+
+softdepend: [ PlaceholderAPI,Towny, Matrix-Bukkit ]

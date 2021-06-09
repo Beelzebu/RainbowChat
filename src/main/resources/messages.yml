@@ -1,0 +1,6 @@
+channel:
+  switch: '&7Your messages will be sent to &6%channel%'
+  no-audience: '&7Nobody can read you.'
+towny:
+  no-town: '&7You don''t belong to any town.'
+  no-nation: '&7You don''t belong to any nation.'
