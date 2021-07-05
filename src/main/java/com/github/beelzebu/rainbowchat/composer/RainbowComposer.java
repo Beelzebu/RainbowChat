@@ -1,16 +1,13 @@
 package com.github.beelzebu.rainbowchat.composer;
 
 import com.github.beelzebu.rainbowchat.util.Util;
-import io.papermc.paper.chat.ChatComposer;
+import io.papermc.paper.chat.ChatRenderer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Beelzebu
  */
-public class RainbowComposer implements ChatComposer {
+public class RainbowComposer implements ChatRenderer {
 
     public static final List<RainbowComposer> COMPOSERS = new ArrayList<>();
     private final String name;
@@ -61,7 +58,7 @@ public class RainbowComposer implements ChatComposer {
     }
 
     @Override
-    public @NotNull Component composeChat(@NotNull Player source, @Nullable Component displayName, @NotNull Component message) {
+    public @NotNull Component render(@NotNull Player source, @Nullable Component displayName, @NotNull Component message, @NotNull Audience viewer) {
         Component component = Util.replace(this.format, source);
         message = message.color(color);
         if (source.hasPermission("rainbowchat.color")) {

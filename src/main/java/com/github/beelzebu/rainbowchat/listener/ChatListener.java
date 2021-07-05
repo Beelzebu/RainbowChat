@@ -31,7 +31,7 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         ChatChannel chatChannel = plugin.getStorage().getChannel(player);
         Audience audience = chatChannel.getAudience(player);
-        Component component = chatChannel.getComposer(player).composeChat(player, player.displayName(), event.message());
+        Component component = chatChannel.getComposer(player).render(player, player.displayName(), event.message(), audience);
         audience.sendMessage(component);
     }
 }

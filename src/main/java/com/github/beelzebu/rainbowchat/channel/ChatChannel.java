@@ -54,7 +54,7 @@ public interface ChatChannel {
             storage.setChannel(player.getUniqueId(), this);
         }
         Audience audience = getAudience(player);
-        Component component = getComposer(player).composeChat(player, player.displayName(), Util.deserialize(message));
+        Component component = getComposer(player).render(player, player.displayName(), Util.deserialize(message), audience);
         audience.sendMessage(component);
         if (oldChannel != this) {
             storage.setChannel(player.getUniqueId(), oldChannel);
