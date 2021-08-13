@@ -4,7 +4,6 @@ import com.github.beelzebu.rainbowchat.channel.ChatChannel;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +16,7 @@ public class MemoryChatStorage implements ChatStorage {
 
     private final Map<String, ChatChannel> channelMap = new HashMap<>();
     private final Map<UUID, String> playerMap = new HashMap<>();
+    private ChatChannel defChannel;
 
     @Override
     public @NotNull ChatChannel getChannel(@NotNull Player player) {
@@ -27,7 +27,7 @@ public class MemoryChatStorage implements ChatStorage {
                 return chatChannel;
             }
         }
-        return channelMap.values().stream().filter(ChatChannel::isDefault).findAny().orElse(null);
+        return defChannel;
     }
 
     @Override
@@ -42,6 +42,9 @@ public class MemoryChatStorage implements ChatStorage {
     @Override
     public void loadChannel(@NotNull ChatChannel chatChannel) {
         channelMap.put(chatChannel.getName(), chatChannel);
+        if (chatChannel.isDefault()) {
+            defChannel = chatChannel;
+        }
     }
 
     @Override

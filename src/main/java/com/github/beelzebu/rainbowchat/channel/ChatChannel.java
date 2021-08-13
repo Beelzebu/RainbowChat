@@ -4,7 +4,10 @@ import com.github.beelzebu.rainbowchat.RainbowChat;
 import com.github.beelzebu.rainbowchat.composer.RainbowComposer;
 import com.github.beelzebu.rainbowchat.storage.ChatStorage;
 import com.github.beelzebu.rainbowchat.util.Util;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
@@ -53,9 +56,9 @@ public interface ChatChannel {
         if (oldChannel != this) {
             storage.setChannel(player.getUniqueId(), this);
         }
-        Audience audience = getAudience(player);
-        Component component = getComposer(player).render(player, player.displayName(), Util.deserialize(message), audience);
-        audience.sendMessage(component);
+        Set<Audience> audienceSet = new HashSet<>();
+        audienceSet.add(getAudience(player));
+        new AsyncChatEvent(true, player, audienceSet, getComposer(player), Util.deserialize(message), Util.deserialize(message)).callEvent();
         if (oldChannel != this) {
             storage.setChannel(player.getUniqueId(), oldChannel);
         }

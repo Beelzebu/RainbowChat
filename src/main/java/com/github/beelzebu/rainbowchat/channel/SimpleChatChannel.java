@@ -130,7 +130,7 @@ public final class SimpleChatChannel implements ChatChannel {
         return command;
     }
 
-    public @NotNull Command setCommand(@NotNull Command command) {
+    public @NotNull <T extends Command> T setCommand(@NotNull T command) {
         this.command = command;
         return command;
     }

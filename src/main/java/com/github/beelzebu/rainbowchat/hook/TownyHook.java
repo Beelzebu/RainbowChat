@@ -77,6 +77,7 @@ public final class TownyHook extends PluginHook {
             CommandAPI.unregisterCommand(plugin, nationChannel.getCommand());
         }
         nationChannel.setCommand(buildCommand(nationChannel));
+        getChannels().getKeys(false).forEach(key -> loadChannel(getChannels().getConfigurationSection(key), plugin.getChatConfig()));
     }
 
     @Override
@@ -159,7 +160,7 @@ public final class TownyHook extends PluginHook {
     private RegistrableCommand buildCommand(ChatChannel channel) {
         return new RegistrableCommand(plugin, channel.getCommandName(), channel.getPermission(), false) {
             @Override
-            public void onCommand(CommandSender sender, String[] args) {
+            public void onCommand(CommandSender sender, String label, String[] args) {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
                     Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());

@@ -40,12 +40,6 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <relocations>
-                                <relocation>
-                                    <pattern>net.nifheim.bukkit</pattern>
-                                    <shadedPattern>com.github.beelzebu.rainbowchat.lib</shadedPattern>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -98,15 +92,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.nifheim.bukkit</groupId>
+            <groupId>net.nifheim</groupId>
             <artifactId>commandlib</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>1.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>20.1.0</version>
+            <version>21.0.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

@@ -10,6 +10,8 @@ import com.github.beelzebu.rainbowchat.storage.ChatStorage;
 import com.github.beelzebu.rainbowchat.storage.MemoryChatStorage;
 import com.github.beelzebu.rainbowchat.util.Util;
 import java.io.File;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.nifheim.bukkit.commandlib.CommandAPI;
 import net.nifheim.bukkit.commandlib.RegistrableCommand;
 import org.bukkit.Bukkit;
@@ -44,12 +46,41 @@ public final class RainbowChat extends JavaPlugin {
         if (chatConfig.isHookEnabled(Config.TOWNY_HOOK) && Bukkit.getPluginManager().getPlugin("Towny") != null) {
             townyHook = new TownyHook(this);
             townyHook.register();
-            townyHook.getChannels().getKeys(false).forEach(key -> townyHook.loadChannel(townyHook.getChannels().getConfigurationSection(key), chatConfig));
         }
+        loadChannels();
+        new RegistrableCommand(this, "rainbowchat", "rainbowchat.admin", false) {
+
+            @Override
+            public void onCommand(CommandSender sender, String label, String[] args) {
+                if (args.length == 0) {
+                    sender.sendMessage(Component.text("RainbowChat").color(TextColor.color(0xD51750)));
+                } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+                    CommandAPI.unregister(RainbowChat.this);
+                    chatConfig.reload();
+                    if (townyHook != null) {
+                        townyHook.unregister();
+                        townyHook.register();
+                    }
+                    loadChannels();
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onDisable() {
+        if (townyHook != null) {
+            townyHook.unregister();
+        }
+        chatConfig.unload();
+        CommandAPI.unregister(this);
+    }
+
+    private void loadChannels() {
         for (ChatChannel channel : storage.getChannels()) {
             channel.setCommand(new RegistrableCommand(this, channel.getCommandName(), channel.getPermission(), false) {
                 @Override
-                public void onCommand(CommandSender sender, String[] strings) {
+                public void onCommand(CommandSender sender, String label, String[] strings) {
                     if (sender instanceof Player) {
                         if (strings.length == 0) {
                             sender.sendMessage(Util.deserialize(messages.getString("channel.switch").replace("%channel%", Util.serialize(channel.getDisplayName()))));
@@ -65,15 +96,6 @@ public final class RainbowChat extends JavaPlugin {
                 }
             });
         }
-    }
-
-    @Override
-    public void onDisable() {
-        if (townyHook != null) {
-            townyHook.unregister();
-        }
-        chatConfig.unload();
-        CommandAPI.unregister(this);
     }
 
     @NotNull
