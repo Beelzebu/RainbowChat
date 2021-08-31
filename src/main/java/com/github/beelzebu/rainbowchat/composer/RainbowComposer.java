@@ -25,12 +25,10 @@ public class RainbowComposer implements ChatRenderer {
     private final TextColor color;
 
     public static @NotNull RainbowComposer load(String name, String permission, int priority, Component format, TextColor color) {
-        return new RainbowComposer(name, permission, priority, format, color);
-    }
-
-    public static void cache(RainbowComposer format) {
-        COMPOSERS.add(format);
+        RainbowComposer rainbowComposer = new RainbowComposer(name, permission, priority, format, color);
+        COMPOSERS.add(rainbowComposer);
         COMPOSERS.sort(Comparator.comparingInt(RainbowComposer::getPriority));
+        return rainbowComposer;
     }
 
     private RainbowComposer(String name, String permission, int priority, Component format, TextColor color) {

@@ -22,4 +22,19 @@ public abstract class PluginHook {
     public abstract ConfigurationSection getChannels();
 
     public abstract void loadChannel(ConfigurationSection section, Config config);
+
+    public enum Plugin {
+
+        TOWNY("Towny");
+
+        private final String name;
+
+        Plugin(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }

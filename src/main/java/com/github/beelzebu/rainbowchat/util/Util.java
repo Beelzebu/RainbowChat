@@ -10,10 +10,13 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyFormat;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Beelzebu
@@ -65,11 +68,11 @@ public class Util {
         component = component.children(children);
         component = component
                 .replaceText(builder -> builder.match("&[\\da-fA-F]")
-                        .replacement((matchResult, textComponent) -> textComponent.content(textComponent.content().replaceAll("&[\\da-fA-F]", "")).mergeStyle(Util.deserialize(matchResult.group()))))
+                        .replacement((matchResult, textComponent) -> textComponent.content(textComponent.content().replaceAll("&[\\da-fA-F]", "")).mergeStyle(deserialize(matchResult.group()))))
                 .replaceText(builder -> builder.match("\\{#([a-fA-F0-9]{6})}")
                         .replacement("&#$1"))
                 .replaceText(builder -> builder.match("&#[\\da-fA-F]{6}")
-                        .replacement((matchResult, textComponent) -> textComponent.content(textComponent.content().replaceAll("&#[\\da-fA-F]{6}", "")).mergeStyle(Util.deserialize(matchResult.group()))));
+                        .replacement((matchResult, textComponent) -> textComponent.content(textComponent.content().replaceAll("&#[\\da-fA-F]{6}", "")).mergeStyle(deserialize(matchResult.group()))));
         return component;
     }
 
@@ -87,5 +90,38 @@ public class Util {
         component = component.children(children);
         component = component.replaceText(builder -> builder.match("(\\[(i|item)\\]|@(item|i))").replacement(Component.empty().append((displayName.hoverEvent(itemStack)))));
         return component;
+    }
+
+    public static @Nullable TextComponent parseComponent(@NotNull String text, @Nullable List<String> hoverText, @Nullable ClickEvent.Action clickAction, @Nullable String clickCommand) {
+        TextComponent textComponent = deserialize(text);
+        if (textComponent.content().isEmpty()) {
+            return null;
+        }
+        Component hoverTextComponent = null;
+        if (hoverText != null) {
+            hoverTextComponent = deserialize(String.join("\n", hoverText));
+        }
+        ClickEvent clickEvent = null;
+        if (clickAction != null && clickCommand != null) {
+            clickEvent = ClickEvent.clickEvent(clickAction, clickCommand);
+        }
+        return textComponent.hoverEvent(hoverTextComponent).clickEvent(clickEvent);
+    }
+
+    public static @NotNull TextColor parseTextColor(String colorText) {
+        TextColor color = null;
+        if (colorText.startsWith("#")) {
+            color = TextColor.fromHexString(colorText);
+        }
+        if (color == null) {
+            LegacyFormat legacyFormat = LegacyComponentSerializer.parseChar(colorText.charAt(0));
+            if (legacyFormat != null) {
+                color = legacyFormat.color();
+            }
+        }
+        if (color == null) {
+            color = NamedTextColor.WHITE;
+        }
+        return color;
     }
 }

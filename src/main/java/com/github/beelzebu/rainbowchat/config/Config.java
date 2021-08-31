@@ -5,20 +5,18 @@ import com.github.beelzebu.rainbowchat.channel.ChatChannel;
 import com.github.beelzebu.rainbowchat.channel.DynamicAudienceChatChannel;
 import com.github.beelzebu.rainbowchat.channel.SimpleChatChannel;
 import com.github.beelzebu.rainbowchat.composer.RainbowComposer;
+import com.github.beelzebu.rainbowchat.hook.PluginHook;
 import com.github.beelzebu.rainbowchat.util.Util;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.legacy.LegacyFormat;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Config {
 
-    public static final String TOWNY_HOOK = "towny";
     private final RainbowChat plugin;
 
     public Config(RainbowChat plugin) {
@@ -63,11 +60,11 @@ public class Config {
         load();
     }
 
-    public boolean isHookEnabled(String hook) {
-        return plugin.getConfig().getBoolean("hooks." + hook + ".enabled", false);
+    public boolean isHookEnabled(PluginHook.Plugin hook) {
+        return plugin.getConfig().getBoolean("hooks." + hook.getName().toLowerCase(Locale.ROOT) + ".enabled", false);
     }
 
-    private @NotNull ConfigComponent readPart(@NotNull ConfigurationSection section) {
+    private @Nullable TextComponent readComponent(@NotNull ConfigurationSection section) {
         ClickEvent.Action action = null;
         try {
             String actionName = section.getString("click-action");
@@ -77,40 +74,30 @@ public class Config {
         } catch (@NotNull IllegalArgumentException | NullPointerException e) {
             e.printStackTrace();
         }
-        return new ConfigComponent(section.getString("text"), section.getStringList("hover"), action, section.getString("click-command"));
+        String text = section.getString("text");
+        if (text == null || text.isBlank()) {
+            return null;
+        }
+        return Util.parseComponent(text, section.getStringList("hover"), action, section.getString("click-command"));
     }
 
     private void readFormat(String formatName, @NotNull ConfigurationSection section) {
         List<Component> children = new ArrayList<>();
         Component prev = null;
         for (String part : Objects.requireNonNull(section.getConfigurationSection("parts")).getKeys(false)) {
-            Component child = readPart(Objects.requireNonNull(section.getConfigurationSection("parts." + part))).getComponent();
-            if (prev != null) {
-                Component finalPrev = prev;
-                child = child.style(builder -> builder.merge(finalPrev.style(), Style.Merge.Strategy.IF_ABSENT_ON_TARGET, Style.Merge.COLOR), Style.Merge.Strategy.IF_ABSENT_ON_TARGET);
+            Component component = readComponent(Objects.requireNonNull(section.getConfigurationSection("parts." + part)));
+            if (component == null) {
+                continue;
             }
-            children.add(prev = child);
+            children.add(prev = (prev != null ? component.colorIfAbsent(prev.color()) : component));
         }
-        String colorText = section.getString("color", "f").replaceAll("&", "");
-        TextColor color = null;
-        if (colorText.startsWith("#")) {
-            color = TextColor.fromHexString(colorText);
-        }
-        if (color == null) {
-            LegacyFormat legacyFormat = LegacyComponentSerializer.parseChar(colorText.charAt(0));
-            if (legacyFormat != null) {
-                color = legacyFormat.color();
-            }
-        }
-        if (color == null) {
-            color = NamedTextColor.WHITE;
-        }
-        RainbowComposer.cache(RainbowComposer.load(
+        TextColor textColor = Util.parseTextColor(section.getString("color", "f").replaceAll("&", ""));
+        RainbowComposer.load(
                 formatName,
                 section.getString("permission"),
                 section.getInt("priority", 1),
                 Component.empty().children(children),
-                color));
+                textColor);
     }
 
     public @NotNull SimpleChatChannel readChannel(@NotNull String channel, @NotNull ConfigurationSection section) {
@@ -134,33 +121,5 @@ public class Config {
                 section.getStringList("formats"),
                 audienceFunction
         );
-    }
-
-    private static class ConfigComponent {
-
-        private final @NotNull TextComponent text;
-        private final @Nullable Component hoverText;
-        private final @Nullable ClickEvent.Action clickAction;
-        private final @Nullable String clickCommand;
-
-        public ConfigComponent(@Nullable String text, @Nullable List<String> hoverText, @Nullable ClickEvent.Action clickAction, @Nullable String clickCommand) {
-            this.text = text != null ? Util.deserialize(text) : Component.empty();
-            this.hoverText = hoverText == null ? null : Util.deserialize(String.join("\n", hoverText));
-            if (clickAction != null && clickCommand != null) {
-                this.clickAction = clickAction;
-                this.clickCommand = clickCommand;
-            } else {
-                this.clickAction = null;
-                this.clickCommand = null;
-            }
-        }
-
-        public @NotNull Component getComponent() {
-            Component component = text.hoverEvent(hoverText);
-            if (clickAction != null && clickCommand != null) {
-                component = component.clickEvent(ClickEvent.clickEvent(clickAction, clickCommand));
-            }
-            return component;
-        }
     }
 }
