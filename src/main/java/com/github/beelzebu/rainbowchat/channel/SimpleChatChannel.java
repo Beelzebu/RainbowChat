@@ -110,13 +110,13 @@ public final class SimpleChatChannel implements ChatChannel {
 
     @Override
     public @NotNull Audience getAudience(Player audience) {
-        if (def) {
+        if (def || getPermission() == null) {
             return Bukkit.getServer();
         } else {
             Set<Audience> members = new HashSet<>();
             members.add(Bukkit.getConsoleSender());
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (getPermission() == null || player.hasPermission(getPermission())) {
+                if (player.hasPermission(getPermission())) {
                     members.add(player);
                 }
             }
