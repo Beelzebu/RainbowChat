@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -51,16 +52,20 @@ public interface ChatChannel {
     @NotNull Audience getAudience(Player player);
 
     default void sendMessage(Player player, String message) {
-        ChatStorage storage = RainbowChat.getPlugin(RainbowChat.class).getStorage();
-        ChatChannel oldChannel = storage.getChannel(player);
-        if (oldChannel != this) {
-            storage.setChannel(player.getUniqueId(), this);
-        }
-        Set<Audience> audienceSet = new HashSet<>();
-        audienceSet.add(getAudience(player));
-        new AsyncChatEvent(true, player, audienceSet, getComposer(player), Util.deserialize(message), Util.deserialize(message)).callEvent();
-        if (oldChannel != this) {
-            storage.setChannel(player.getUniqueId(), oldChannel);
-        }
+        RainbowChat plugin = RainbowChat.getPlugin(RainbowChat.class);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            ChatStorage storage = plugin.getStorage();
+            ChatChannel oldChannel = storage.getChannel(player);
+            if (oldChannel != this) {
+                storage.setChannel(player.getUniqueId(), this);
+            }
+            Set<Audience> audienceSet = new HashSet<>();
+            audienceSet.add(getAudience(player));
+            AsyncChatEvent event = new AsyncChatEvent(true, player, audienceSet, getComposer(player), Util.deserialize(message), Util.deserialize(message));
+            event.callEvent();
+            if (oldChannel != this) {
+                storage.setChannel(player.getUniqueId(), oldChannel);
+            }
+        });
     }
 }
