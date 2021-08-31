@@ -31,6 +31,11 @@ public class MemoryChatStorage implements ChatStorage {
     }
 
     @Override
+    public @NotNull ChatChannel getDefChannel() {
+        return defChannel;
+    }
+
+    @Override
     public void setChannel(UUID uniqueId, @Nullable ChatChannel chatChannel) {
         if (chatChannel == null) {
             playerMap.remove(uniqueId);
@@ -54,6 +59,7 @@ public class MemoryChatStorage implements ChatStorage {
 
     @Override
     public void clearChannels() {
+        playerMap.clear();
         channelMap.clear();
     }
 }

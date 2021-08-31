@@ -13,6 +13,8 @@ public interface ChatStorage {
 
     @NotNull ChatChannel getChannel(Player player);
 
+    @NotNull ChatChannel getDefChannel();
+
     void setChannel(UUID uniqueId, ChatChannel chatChannel);
 
     void loadChannel(ChatChannel chatChannel);

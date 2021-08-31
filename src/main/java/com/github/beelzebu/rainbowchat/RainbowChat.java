@@ -5,6 +5,7 @@ import com.github.beelzebu.rainbowchat.config.Config;
 import com.github.beelzebu.rainbowchat.hook.PluginHook;
 import com.github.beelzebu.rainbowchat.hook.TownyHook;
 import com.github.beelzebu.rainbowchat.listener.ChatListener;
+import com.github.beelzebu.rainbowchat.listener.LoginListener;
 import com.github.beelzebu.rainbowchat.placeholder.RainbowChatPlaceholders;
 import com.github.beelzebu.rainbowchat.storage.ChatStorage;
 import com.github.beelzebu.rainbowchat.storage.MemoryChatStorage;
@@ -33,12 +34,14 @@ public final class RainbowChat extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        this.storage = new MemoryChatStorage();
+        Bukkit.getPluginManager().registerEvents(new LoginListener(storage), this);
         Bukkit.getPluginManager().registerEvents(new ChatListener(this), this);
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             PLACEHOLDER_API = true;
             new RainbowChatPlaceholders(this).register();
         }
-        this.storage = new MemoryChatStorage();
         chatConfig = new Config(this);
         chatConfig.load();
         saveResource("messages.yml", false);
@@ -53,7 +56,7 @@ public final class RainbowChat extends JavaPlugin {
             @Override
             public void onCommand(CommandSender sender, String label, String[] args) {
                 if (args.length == 0) {
-                    sender.sendMessage(Component.text("RainbowChat").color(TextColor.color(0xD51750)));
+                    sender.sendMessage(Component.text("RainbowChat v" + RainbowChat.this.getDescription().getVersion()).color(TextColor.color(0xD51750)));
                 } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                     CommandAPI.unregister(RainbowChat.this);
                     chatConfig.reload();
@@ -62,6 +65,7 @@ public final class RainbowChat extends JavaPlugin {
                         townyHook.register();
                     }
                     loadChannels();
+                    sender.sendMessage(Component.text("Plugin reloaded").color(TextColor.color(0x88FF00)));
                 }
             }
         };

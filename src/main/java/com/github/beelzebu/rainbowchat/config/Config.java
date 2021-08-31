@@ -37,7 +37,7 @@ public class Config {
     }
 
     public void load() {
-        plugin.saveResource("config.yml", false);
+        plugin.reloadConfig();
         Objects.requireNonNull(plugin.getConfig().getConfigurationSection("formats")).getKeys(false).forEach(formatName -> readFormat(formatName, plugin.getConfig().getConfigurationSection("formats." + formatName)));
         Objects.requireNonNull(plugin.getConfig().getConfigurationSection("channels")).getKeys(false).forEach(channel -> plugin.getStorage().loadChannel(readChannel(channel, plugin.getConfig().getConfigurationSection("channels." + channel))));
         if (plugin.getStorage().getChannels().isEmpty()) {
@@ -113,7 +113,7 @@ public class Config {
                 color));
     }
 
-    public @NotNull ChatChannel readChannel(@NotNull String channel, @NotNull ConfigurationSection section) {
+    public @NotNull SimpleChatChannel readChannel(@NotNull String channel, @NotNull ConfigurationSection section) {
         return new SimpleChatChannel(
                 channel,
                 Objects.requireNonNull(section.getString("command")),
@@ -125,7 +125,7 @@ public class Config {
         );
     }
 
-    public @NotNull ChatChannel readChannel(@NotNull String channel, @NotNull ConfigurationSection section, Function<Player, Audience> audienceFunction) {
+    public @NotNull DynamicAudienceChatChannel readChannel(@NotNull String channel, @NotNull ConfigurationSection section, Function<Player, Audience> audienceFunction) {
         return new DynamicAudienceChatChannel(
                 channel,
                 Objects.requireNonNull(section.getString("command")),
