@@ -67,7 +67,7 @@ public final class TownyHook extends PluginHook {
         if (nationChannel instanceof DynamicAudienceChatChannel) {
             ((DynamicAudienceChatChannel) nationChannel).setAudienceFunction(getNationAudience());
         } else {
-            plugin.getStorage().loadChannel(new DynamicAudienceChatChannel(nationChannel.getName(), nationChannel.getCommandName(), townChannel.getCommandAliases(), nationChannel.getDisplayName(), nationChannel.getFormats(), getNationAudience()));
+            plugin.getStorage().loadChannel(new DynamicAudienceChatChannel(nationChannel.getName(), nationChannel.getCommandName(), nationChannel.getCommandAliases(), nationChannel.getDisplayName(), nationChannel.getFormats(), getNationAudience()));
         }
         if (townChannel.getCommand() != null) {
             CommandAPI.unregisterCommand(plugin, townChannel.getCommand());
