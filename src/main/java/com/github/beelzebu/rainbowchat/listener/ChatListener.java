@@ -21,7 +21,7 @@ public class ChatListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)//, ignoreCancelled = true)
     public void onPlayerChat(@NotNull AsyncChatEvent event) {
         Player player = event.getPlayer();
         ChatChannel chatChannel = plugin.getStorage().getChannel(player);

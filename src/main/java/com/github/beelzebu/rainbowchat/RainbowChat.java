@@ -2,7 +2,8 @@ package com.github.beelzebu.rainbowchat;
 
 import com.github.beelzebu.rainbowchat.channel.ChatChannel;
 import com.github.beelzebu.rainbowchat.config.Config;
-import com.github.beelzebu.rainbowchat.hook.PluginHook;
+import com.github.beelzebu.rainbowchat.hook.Hook;
+import com.github.beelzebu.rainbowchat.hook.HookType;
 import com.github.beelzebu.rainbowchat.hook.TownyHook;
 import com.github.beelzebu.rainbowchat.listener.ChatListener;
 import com.github.beelzebu.rainbowchat.listener.LoginListener;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public final class RainbowChat extends JavaPlugin {
 
     public static boolean PLACEHOLDER_API = false;
-    private final Map<PluginHook.Plugin, PluginHook> hooks = new HashMap<>();
+    private final Map<HookType, Hook> hooks = new HashMap<>();
     private Config chatConfig;
     private MemoryChatStorage storage;
     private FileConfiguration messages;
@@ -68,7 +69,6 @@ public final class RainbowChat extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
         chatConfig.unload();
         CommandAPI.unregister(this);
     }
@@ -109,8 +109,11 @@ public final class RainbowChat extends JavaPlugin {
     }
 
     public void reloadHooks() {
-        for (PluginHook.Plugin hook : PluginHook.Plugin.values()) {
-            if (chatConfig.isHookEnabled(hook) && Bukkit.getPluginManager().getPlugin(hook.getName()) != null) {
+        for (HookType hook : HookType.values()) {
+            if (chatConfig.isHookEnabled(hook)) {
+                if (hook.isPlugin() && Bukkit.getPluginManager().getPlugin(hook.getName()) == null) {
+                    continue;
+                }
                 loadHook(hook);
             } else {
                 unloadHook(hook);
@@ -118,27 +121,28 @@ public final class RainbowChat extends JavaPlugin {
         }
     }
 
-    private void loadHook(PluginHook.Plugin hook) {
-        PluginHook pluginHook = hooks.get(hook);
-        if (pluginHook != null) { // hook is already registered, so reload
-            pluginHook.unregister();
-            pluginHook.register();
-            return;
-        }
-        switch (hook) {
+    private void loadHook(HookType hookType) {
+        unloadHook(hookType);
+        Hook hook = null;
+        switch (hookType) {
             case TOWNY:
-                pluginHook = new TownyHook(this);
+                hook = new TownyHook(this);
                 break;
             default:
                 break;
         }
-        hooks.put(hook, pluginHook);
+        if (hook != null) {
+            getLogger().info("Registering hook: " + hookType);
+            hook.register();
+            hooks.put(hookType, hook);
+        }
     }
 
-    private void unloadHook(PluginHook.Plugin hook) {
-        PluginHook pluginHook = hooks.get(hook);
+    private void unloadHook(HookType hook) {
+        Hook pluginHook = hooks.get(hook);
         if (pluginHook != null) {
             pluginHook.unregister();
+            hooks.remove(hook);
         }
     }
 }

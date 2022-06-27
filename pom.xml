@@ -13,7 +13,7 @@
 
     <description>JSON chat with rgb support for 1.16+</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -40,6 +40,12 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.nifheim.bukkit.commandlib</pattern>
+                                    <shadedPattern>com.github.beelzebu.rainbowchat.lib.command</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -74,9 +80,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -92,15 +98,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.nifheim</groupId>
-            <artifactId>commandlib</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <groupId>com.github.UlrichBR</groupId>
+            <artifactId>UltimateClansV4</artifactId>
+            <version>1.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nifheim</groupId>
+            <artifactId>commandlib</artifactId>
+            <version>master-dffb5daf05-1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>21.0.1</version>
+            <version>23.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

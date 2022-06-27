@@ -5,7 +5,7 @@ import com.github.beelzebu.rainbowchat.channel.ChatChannel;
 import com.github.beelzebu.rainbowchat.channel.DynamicAudienceChatChannel;
 import com.github.beelzebu.rainbowchat.channel.SimpleChatChannel;
 import com.github.beelzebu.rainbowchat.composer.RainbowComposer;
-import com.github.beelzebu.rainbowchat.hook.PluginHook;
+import com.github.beelzebu.rainbowchat.hook.HookType;
 import com.github.beelzebu.rainbowchat.util.Util;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class Config {
         load();
     }
 
-    public boolean isHookEnabled(PluginHook.Plugin hook) {
+    public boolean isHookEnabled(HookType hook) {
         return plugin.getConfig().getBoolean("hooks." + hook.getName().toLowerCase(Locale.ROOT) + ".enabled", false);
     }
 

@@ -5,7 +5,6 @@ import com.github.beelzebu.rainbowchat.channel.ChatChannel;
 import com.github.beelzebu.rainbowchat.channel.DynamicAudienceChatChannel;
 import com.github.beelzebu.rainbowchat.channel.SimpleChatChannel;
 import com.github.beelzebu.rainbowchat.composer.RainbowComposer;
-import com.github.beelzebu.rainbowchat.config.Config;
 import com.github.beelzebu.rainbowchat.util.Util;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
@@ -28,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Beelzebu
  */
-public final class TownyHook extends PluginHook {
+public final class TownyHook extends Hook {
 
     public TownyHook(RainbowChat plugin) {
         super(plugin);
@@ -77,7 +76,8 @@ public final class TownyHook extends PluginHook {
             CommandAPI.unregisterCommand(plugin, nationChannel.getCommand());
         }
         nationChannel.setCommand(buildCommand(nationChannel));
-        getChannels().getKeys(false).forEach(key -> loadChannel(getChannels().getConfigurationSection(key), plugin.getChatConfig()));
+        loadChannel("town", getTownAudience());
+        loadChannel("nation", getNationAudience());
     }
 
     @Override
@@ -85,23 +85,8 @@ public final class TownyHook extends PluginHook {
     }
 
     @Override
-    public ConfigurationSection getChannels() {
+    public ConfigurationSection getChannelsConfig() {
         return plugin.getConfig().getConfigurationSection("hooks.towny.channels");
-    }
-
-    @Override
-    public void loadChannel(ConfigurationSection section, Config config) {
-        String name = section.getName();
-        switch (name.toLowerCase()) {
-            case "town":
-                ChatChannel townChannel = config.readChannel(name, section, getTownAudience());
-                plugin.getStorage().loadChannel(townChannel);
-                break;
-            case "nation":
-                ChatChannel nationChannel = config.readChannel(name, section, getNationAudience());
-                plugin.getStorage().loadChannel(nationChannel);
-                break;
-        }
     }
 
     private @NotNull Audience getAudience(@Nullable ResidentList residentList) {

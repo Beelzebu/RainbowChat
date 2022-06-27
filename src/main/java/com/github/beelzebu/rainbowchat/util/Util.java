@@ -81,14 +81,14 @@ public class Util {
         if (itemStack.getType().isAir()) {
             return component;
         }
-        List<Component> children = new ArrayList<>();
+        /*List<Component> children = new ArrayList<>();
         for (int i = 0; i < component.children().size(); i++) {
             Component child = component.children().get(i);
             children.add(i, replaceColor(child));
-        }
-        Component displayName = Objects.requireNonNullElse(itemStack.getItemMeta().displayName(), itemStack.displayName()).append(Component.text(" (x" + itemStack.getAmount() + ")").color(NamedTextColor.AQUA));
-        component = component.children(children);
-        component = component.replaceText(builder -> builder.match("(\\[(i|item)\\]|@(item|i))").replacement(Component.empty().append((displayName.hoverEvent(itemStack)))));
+        }*/
+        Component displayName = Objects.requireNonNullElse(itemStack.getItemMeta().displayName(), itemStack.displayName()).append(Component.text(" (x" + itemStack.getAmount() + ")").color(NamedTextColor.AQUA)).hoverEvent(itemStack);
+        //component = component.children(children);
+        component = component.replaceText(builder -> builder.match("(\\[(i|item)\\]|@(item|i))").replacement(displayName));
         return component;
     }
 
