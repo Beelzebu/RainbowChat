@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Beelzebu
  */
-public abstract class AbstractChatChannel implements ChatChannel {
+public abstract class BaseChatChannel implements ChatChannel {
 
     private final @NotNull String name;
     private final @NotNull String commandName;
@@ -22,8 +22,9 @@ public abstract class AbstractChatChannel implements ChatChannel {
     private final @NotNull Component displayName;
     private final @NotNull List<String> formats;
     private @Nullable Command command;
+    private final boolean chatHologram;
 
-    protected AbstractChatChannel(@NotNull String name, @NotNull String commandName, @NotNull String[] aliases, @NotNull Component displayName, @NotNull List<String> formats) {
+    protected BaseChatChannel(@NotNull String name, @NotNull String commandName, @NotNull String[] aliases, @NotNull Component displayName, @NotNull List<String> formats, boolean chatHologram) {
         this.name = name;
         this.commandName = commandName;
         this.aliases = aliases;
@@ -46,6 +47,7 @@ public abstract class AbstractChatChannel implements ChatChannel {
                 it.remove();
             }
         }
+        this.chatHologram = chatHologram;
     }
 
     @NotNull
@@ -97,6 +99,11 @@ public abstract class AbstractChatChannel implements ChatChannel {
     @Override
     public void setDefault(boolean def) {
         this.def = def;
+    }
+
+    @Override
+    public boolean isChatHologram() {
+        return chatHologram;
     }
 
     @Override

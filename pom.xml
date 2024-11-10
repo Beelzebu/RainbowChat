@@ -6,7 +6,7 @@
 
     <groupId>com.github.beelzebu</groupId>
     <artifactId>RainbowChat</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>RainbowChat</name>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.19.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -98,12 +98,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.UlrichBR</groupId>
-            <artifactId>UltimateClansV4</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.nifheim</groupId>
             <artifactId>commandlib</artifactId>
             <version>master-dffb5daf05-1</version>
@@ -114,6 +108,12 @@
             <artifactId>annotations</artifactId>
             <version>23.0.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>5.1.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

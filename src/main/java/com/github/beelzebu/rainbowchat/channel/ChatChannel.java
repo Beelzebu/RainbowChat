@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -43,6 +44,8 @@ public interface ChatChannel {
 
     @NotNull RainbowComposer getComposer(Player player);
 
+    boolean isChatHologram();
+
     /**
      * Get the relative audience for this channel with the provided player.
      *
@@ -57,14 +60,18 @@ public interface ChatChannel {
             ChatStorage storage = plugin.getStorage();
             ChatChannel oldChannel = storage.getChannel(player);
             if (oldChannel != this) {
-                storage.setChannel(player.getUniqueId(), this);
+                storage.addToChannel(player, this);
             }
+            Audience audience = getAudience(player);
             Set<Audience> audienceSet = new HashSet<>();
-            audienceSet.add(getAudience(player));
-            AsyncChatEvent event = new AsyncChatEvent(true, player, audienceSet, getComposer(player), Util.deserialize(message), Util.deserialize(message));
-            event.callEvent();
+            audienceSet.add(audience);
+            Component componentMessage = Util.deserialize(message);
+            AsyncChatEvent event = new AsyncChatEvent(true, player, audienceSet, getComposer(player), componentMessage, componentMessage, SignedMessage.system(message, componentMessage));
+            if (event.callEvent()) {
+                audience.sendMessage(event.renderer().render(player, player.displayName(), event.message(), audience));
+            }
             if (oldChannel != this) {
-                storage.setChannel(player.getUniqueId(), oldChannel);
+                storage.addToChannel(player, oldChannel);
             }
         });
     }

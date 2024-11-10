@@ -12,12 +12,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Beelzebu
  */
-public final class DynamicAudienceChatChannel extends AbstractChatChannel implements ChatChannel {
+public final class DynamicAudienceChatChannel extends BaseChatChannel implements ChatChannel {
 
     private @NotNull Function<Player, Audience> audienceFunction;
 
-    public DynamicAudienceChatChannel(@NotNull String name, @NotNull String commandName, @NotNull String[] aliases, @NotNull Component displayName, @NotNull List<String> formats, @NotNull Function<Player, Audience> audienceFunction) {
-        super(name, commandName, aliases, displayName, formats);
+    public DynamicAudienceChatChannel(@NotNull String name, @NotNull String commandName, @NotNull String[] aliases, @NotNull Component displayName, @NotNull List<String> formats, @NotNull Function<Player, Audience> audienceFunction, boolean chatHologram) {
+        super(name, commandName, aliases, displayName, formats, chatHologram);
         this.audienceFunction = audienceFunction;
     }
 

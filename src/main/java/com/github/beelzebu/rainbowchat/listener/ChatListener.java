@@ -2,8 +2,12 @@ package com.github.beelzebu.rainbowchat.listener;
 
 import com.github.beelzebu.rainbowchat.RainbowChat;
 import com.github.beelzebu.rainbowchat.channel.ChatChannel;
+import com.github.beelzebu.rainbowchat.composer.RainbowComposer;
+import com.github.beelzebu.rainbowchat.util.Util;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,6 +32,10 @@ public class ChatListener implements Listener {
         Audience audience = chatChannel.getAudience(player);
         event.viewers().clear();
         event.viewers().add(audience);
-        event.renderer(chatChannel.getComposer(player));
+        RainbowComposer renderer = chatChannel.getComposer(player);
+        event.renderer(renderer);
+        if (chatChannel.isChatHologram()) {
+            Bukkit.getScheduler().runTask(plugin, () -> plugin.getHologramUtil().createHologram(player.getEyeLocation().add(0, .9, 0), player.name().append(Component.text(": ")).append(Util.formatChatMessage(event.message(), player, renderer.style(), renderer.color()))));
+        }
     }
 }

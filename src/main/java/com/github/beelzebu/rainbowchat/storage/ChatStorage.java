@@ -2,9 +2,10 @@ package com.github.beelzebu.rainbowchat.storage;
 
 import com.github.beelzebu.rainbowchat.channel.ChatChannel;
 import java.util.Collection;
-import java.util.UUID;
+import net.kyori.adventure.identity.Identified;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Beelzebu
@@ -13,9 +14,13 @@ public interface ChatStorage {
 
     @NotNull ChatChannel getChannel(Player player);
 
-    @NotNull ChatChannel getDefChannel();
+    @Nullable ChatChannel getChannelByName(String channel);
 
-    void setChannel(UUID uniqueId, ChatChannel chatChannel);
+    @NotNull ChatChannel getDefaultChannel();
+
+    void addToChannel(Identified identified, ChatChannel chatChannel);
+
+    void resetChannel(Identified identified);
 
     void loadChannel(ChatChannel chatChannel);
 

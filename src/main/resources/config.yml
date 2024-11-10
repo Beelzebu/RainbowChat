@@ -4,6 +4,7 @@ channels:
     displayname: ''
     default: true
     command: 'g'
+    hologram: false
     aliases:
     - 'general'
     - 'global'
@@ -15,6 +16,8 @@ channels:
     displayname: '&8(&5Staff&8) '
     default: false
     command: 'sc'
+    hologram: false
+    permission: 'rainbowchat.channel.staff'
     aliases:
     - 'staffchat'
     formats:
@@ -26,12 +29,14 @@ hooks:
       town:
         displayname: '&8(&bTown&8) '
         command: 'tc'
+        hologram: false
         formats:
         - 'town-default'
         - 'town-vip'
       nation:
         displayname: '&8(&eNación&8) '
         command: 'nc'
+        hologram: false
         formats:
         - 'nation-default'
         - 'nation-vip'

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import net.kyori.adventure.identity.Identified;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,17 +32,27 @@ public class MemoryChatStorage implements ChatStorage {
     }
 
     @Override
-    public @NotNull ChatChannel getDefChannel() {
+    public @NotNull ChatChannel getChannelByName(String channel) {
+        return channelMap.get(channel);
+    }
+
+    @Override
+    public @NotNull ChatChannel getDefaultChannel() {
         return defChannel;
     }
 
     @Override
-    public void setChannel(UUID uniqueId, @Nullable ChatChannel chatChannel) {
+    public void addToChannel(Identified identified, @Nullable ChatChannel chatChannel) {
         if (chatChannel == null) {
-            playerMap.remove(uniqueId);
+            playerMap.remove(identified.identity().uuid());
         } else {
-            playerMap.put(uniqueId, chatChannel.getName());
+            playerMap.put(identified.identity().uuid(), chatChannel.getName());
         }
+    }
+
+    @Override
+    public void resetChannel(Identified identified) {
+        playerMap.remove(identified.identity().uuid());
     }
 
     @Override

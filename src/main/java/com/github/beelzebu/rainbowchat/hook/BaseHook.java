@@ -11,11 +11,11 @@ import org.bukkit.entity.Player;
 /**
  * @author Beelzebu
  */
-public abstract class Hook {
+public abstract class BaseHook {
 
     protected final RainbowChat plugin;
 
-    public Hook(RainbowChat plugin) {
+    public BaseHook(RainbowChat plugin) {
         this.plugin = plugin;
         plugin.getLogger().info("Loading hook: " + getClass().getSimpleName());
     }

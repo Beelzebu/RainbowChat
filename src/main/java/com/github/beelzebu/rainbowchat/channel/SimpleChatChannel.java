@@ -15,14 +15,14 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Beelzebu
  */
-public final class SimpleChatChannel extends AbstractChatChannel implements ChatChannel {
+public final class SimpleChatChannel extends BaseChatChannel implements ChatChannel {
 
-    public static final SimpleChatChannel DEFAULT_CHANNEL = new SimpleChatChannel("default", "g", new String[0], true, Component.text("default"), RainbowComposer.COMPOSERS.stream().map(RainbowComposer::getName).collect(Collectors.toList()), null);
+    public static final SimpleChatChannel DEFAULT_CHANNEL = new SimpleChatChannel("default", "g", new String[0], true, Component.text("default"), RainbowComposer.COMPOSERS.stream().map(RainbowComposer::getName).collect(Collectors.toList()), null, true);
 
     private final @Nullable String permission;
 
-    public SimpleChatChannel(@NotNull String name, @NotNull String commandName, @NotNull String[] aliases, boolean def, @NotNull Component displayName, @NotNull List<String> formats, @Nullable String permission) {
-        super(name, commandName, aliases, displayName, formats);
+    public SimpleChatChannel(@NotNull String name, @NotNull String commandName, @NotNull String[] aliases, boolean def, @NotNull Component displayName, @NotNull List<String> formats, @Nullable String permission, boolean chatHologram) {
+        super(name, commandName, aliases, displayName, formats, chatHologram);
         this.setDefault(def);
         this.permission = permission;
     }

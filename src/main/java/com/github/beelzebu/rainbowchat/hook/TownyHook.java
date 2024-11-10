@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Beelzebu
  */
-public final class TownyHook extends Hook {
+public final class TownyHook extends BaseHook {
 
     public TownyHook(RainbowChat plugin) {
         super(plugin);
@@ -46,12 +46,13 @@ public final class TownyHook extends Hook {
                         new String[]{"townchat"},
                         Component.text("town"),
                         RainbowComposer.COMPOSERS.stream().map(RainbowComposer::getName).collect(Collectors.toList()),
-                        getTownAudience())
+                        getTownAudience(),
+                        false)
         );
         if (townChannel instanceof DynamicAudienceChatChannel) {
             ((DynamicAudienceChatChannel) townChannel).setAudienceFunction(getTownAudience());
         } else {
-            plugin.getStorage().loadChannel(new DynamicAudienceChatChannel(townChannel.getName(), townChannel.getCommandName(), townChannel.getCommandAliases(), townChannel.getDisplayName(), townChannel.getFormats(), getTownAudience()));
+            plugin.getStorage().loadChannel(new DynamicAudienceChatChannel(townChannel.getName(), townChannel.getCommandName(), townChannel.getCommandAliases(), townChannel.getDisplayName(), townChannel.getFormats(), getTownAudience(), false));
         }
         ChatChannel nationChannel = plugin.getStorage().getChannels().stream().filter(chatChannel ->
                 chatChannel.getName().equals("nation")).findFirst().orElseGet(() ->
@@ -61,12 +62,13 @@ public final class TownyHook extends Hook {
                         new String[]{"nationchat"},
                         Component.text("nation"),
                         RainbowComposer.COMPOSERS.stream().map(RainbowComposer::getName).collect(Collectors.toList()),
-                        getNationAudience())
+                        getNationAudience(),
+                        false)
         );
         if (nationChannel instanceof DynamicAudienceChatChannel) {
             ((DynamicAudienceChatChannel) nationChannel).setAudienceFunction(getNationAudience());
         } else {
-            plugin.getStorage().loadChannel(new DynamicAudienceChatChannel(nationChannel.getName(), nationChannel.getCommandName(), nationChannel.getCommandAliases(), nationChannel.getDisplayName(), nationChannel.getFormats(), getNationAudience()));
+            plugin.getStorage().loadChannel(new DynamicAudienceChatChannel(nationChannel.getName(), nationChannel.getCommandName(), nationChannel.getCommandAliases(), nationChannel.getDisplayName(), nationChannel.getFormats(), getNationAudience(), false));
         }
         if (townChannel.getCommand() != null) {
             CommandAPI.unregisterCommand(plugin, townChannel.getCommand());
@@ -159,7 +161,7 @@ public final class TownyHook extends Hook {
                     }
                     if (args.length == 0) {
                         player.sendMessage(Util.deserialize(plugin.getMessages().getString("channel.switch").replace("%channel%", Util.serialize(channel.getDisplayName()))));
-                        plugin.getStorage().setChannel(player.getUniqueId(), channel);
+                        plugin.getStorage().addToChannel(player.getUniqueId(), channel);
                     } else {
                         StringBuilder stringBuilder = new StringBuilder();
                         for (String string : args) {

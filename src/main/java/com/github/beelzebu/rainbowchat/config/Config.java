@@ -16,6 +16,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -91,13 +92,24 @@ public class Config {
             }
             children.add(prev = (prev != null ? component.colorIfAbsent(prev.color()) : component));
         }
-        TextColor textColor = Util.parseTextColor(section.getString("color", "f").replaceAll("&", ""));
-        RainbowComposer.load(
-                formatName,
-                section.getString("permission"),
-                section.getInt("priority", 1),
-                Component.empty().children(children),
-                textColor);
+        if (section.contains("style")) {
+            Style style = Util.parseStyle(Objects.requireNonNull(section.getConfigurationSection("style")));
+            RainbowComposer.load(
+                    formatName,
+                    section.getString("permission"),
+                    section.getInt("priority", 1),
+                    Component.empty().children(children),
+                    style);
+
+        } else {
+            TextColor textColor = Util.parseTextColor(section.getString("color", "f").replaceAll("&", ""));
+            RainbowComposer.load(
+                    formatName,
+                    section.getString("permission"),
+                    section.getInt("priority", 1),
+                    Component.empty().children(children),
+                    textColor);
+        }
     }
 
     public @NotNull SimpleChatChannel readChannel(@NotNull String channel, @NotNull ConfigurationSection section) {
@@ -108,7 +120,8 @@ public class Config {
                 section.getBoolean("default"),
                 Util.deserialize(Objects.requireNonNull(section.getString("displayname"))),
                 section.getStringList("formats"),
-                section.getString("permission")
+                section.getString("permission"),
+                section.getBoolean("hologram")
         );
     }
 
@@ -119,7 +132,8 @@ public class Config {
                 section.getStringList("aliases").toArray(new String[0]),
                 Util.deserialize(Objects.requireNonNull(section.getString("displayname"))),
                 section.getStringList("formats"),
-                audienceFunction
+                audienceFunction,
+                section.getBoolean("hologram")
         );
     }
 }

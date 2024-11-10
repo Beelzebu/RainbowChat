@@ -39,14 +39,10 @@ public class RainbowChatPlaceholders extends PlaceholderExpansion {
 
     @Override
     public @NotNull String onPlaceholderRequest(Player player, @NotNull String params) {
-        switch (params.toLowerCase()) {
-            case "channel_name":
-                return plugin.getStorage().getChannel(player).getName();
-            case "channel":
-            case "channel_display":
-                return Util.serialize(plugin.getStorage().getChannel(player).getDisplayName());
-            default:
-                return "unknown placeholder";
-        }
+        return switch (params.toLowerCase()) {
+            case "channel_name" -> plugin.getStorage().getChannel(player).getName();
+            case "channel", "channel_display" -> Util.serialize(plugin.getStorage().getChannel(player).getDisplayName());
+            default -> "unknown placeholder";
+        };
     }
 }

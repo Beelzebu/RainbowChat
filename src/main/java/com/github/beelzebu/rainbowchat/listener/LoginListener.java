@@ -21,14 +21,14 @@ public class LoginListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent playerJoinEvent) {
         if (storage instanceof MemoryChatStorage) {
-            storage.setChannel(playerJoinEvent.getPlayer().getUniqueId(), storage.getDefChannel());
+            storage.addToChannel(playerJoinEvent.getPlayer(), storage.getDefaultChannel());
         }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent playerQuitEvent) {
         if (storage instanceof MemoryChatStorage) {
-            storage.setChannel(playerQuitEvent.getPlayer().getUniqueId(), null);
+            storage.resetChannel(playerQuitEvent.getPlayer());
         }
     }
 }
